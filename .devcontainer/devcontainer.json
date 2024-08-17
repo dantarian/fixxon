@@ -1,9 +1,14 @@
 {
     "name": "project-dev",
     "remoteUser": "vscode",
-    "dockerComposeFile": ["docker-compose.yml"],
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
     "service": "vscode",
-    "runServices": ["vscode"],
+    "runServices": [
+        "vscode",
+        "database"
+    ],
     "shutdownAction": "stopCompose",
     "postCreateCommand": "~/.ssh.sh",
     "workspaceFolder": "/workspace",

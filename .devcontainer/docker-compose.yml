@@ -20,5 +20,8 @@ services:
       - ~/.gitconfig:/home/vscode/.gitconfig
     environment:
       - TZ=
-    entrypoint: ["zsh", "-c", "while sleep 1000; do :; done"]
-
+    entrypoint: [ "zsh", "-c", "while sleep 1000; do :; done" ]
+  database:
+    image: postgres
+    restart: always
+    env_file: ../.env

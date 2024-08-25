@@ -9,7 +9,7 @@ import Config
 
 config :fixxon,
   ecto_repos: [Fixxon.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime, binary_id: true]
 
 # Configures the endpoint
 config :fixxon, FixxonWeb.Endpoint,

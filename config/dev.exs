@@ -2,9 +2,9 @@ import Config
 
 # Configure your database
 config :fixxon, Fixxon.Repo,
-  username: System.get_env("BATHLARP_DATABASE_USER", "postgres"),
-  password: System.get_env("BATHLARP_DATABASE_PASS", "postgres"),
-  hostname: System.get_env("BATHLARP_DATABASE_HOST", "database"),
+  username: System.get_env("POSTGRES_USER", "postgres"),
+  password: System.get_env("POSTGRES_PASSWORD", "postgres"),
+  hostname: System.get_env("POSTGRES_HOST", "database"),
   database: "fixxon_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,

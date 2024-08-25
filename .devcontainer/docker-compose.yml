@@ -21,6 +21,7 @@ services:
     environment:
       - TZ=
     entrypoint: [ "zsh", "-c", "while sleep 1000; do :; done" ]
+    env_file: ../.env
   database:
     image: postgres
     restart: always

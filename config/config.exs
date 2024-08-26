@@ -62,6 +62,7 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :fixxon, :pow,
+  web_module: FixxonWeb,
   user: Fixxon.Users.User,
   repo: Fixxon.Repo
 

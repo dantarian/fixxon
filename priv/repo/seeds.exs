@@ -9,3 +9,9 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+Fixxon.Users.create_admin(%{
+  username: System.get_env("ADMIN_USERNAME", "admin"),
+  password: System.get_env("ADMIN_PASSWORD"),
+  password_confirmation: System.get_env("ADMIN_PASSWORD")
+})

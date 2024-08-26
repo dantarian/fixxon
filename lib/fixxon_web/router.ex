@@ -15,6 +15,10 @@ defmodule FixxonWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :protected do
+    plug Pow.Plug.RequireAuthenticated, error_handler: Pow.Phoenix.PlugErrorHandler
+  end
+
   pipeline :admin do
     plug FixxonWeb.EnsureRolePlug, :admin
   end
@@ -22,17 +26,25 @@ defmodule FixxonWeb.Router do
   scope "/" do
     pipe_through :browser
 
-    pow_routes()
+    pow_session_routes()
+  end
+
+  scope "/", Pow.Phoenix, as: "pow" do
+    pipe_through [:browser, :protected]
+
+    resources "/registration", RegistrationController,
+      singleton: true,
+      only: [:edit, :update]
   end
 
   scope "/", FixxonWeb do
-    pipe_through :browser
+    pipe_through [:browser, :protected]
 
     get "/", PageController, :home
   end
 
   scope "/admin", FixxonWeb do
-    pipe_through [:browser, :admin]
+    pipe_through [:browser, :protected, :admin]
   end
 
   # Other scopes may use custom stacks.

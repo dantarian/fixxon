@@ -15,6 +15,10 @@ defmodule FixxonWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :admin do
+    plug FixxonWeb.EnsureRolePlug, :admin
+  end
+
   scope "/" do
     pipe_through :browser
 
@@ -25,6 +29,10 @@ defmodule FixxonWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+  end
+
+  scope "/admin", FixxonWeb do
+    pipe_through [:browser, :admin]
   end
 
   # Other scopes may use custom stacks.

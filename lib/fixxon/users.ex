@@ -1,5 +1,5 @@
 defmodule Fixxon.Users do
-  alias Fixxon.{Repo, Users.User}
+  alias Fixxon.{Repo, Users.User, Users.Login}
 
   @type t :: %User{}
 
@@ -28,4 +28,10 @@ defmodule Fixxon.Users do
   @spec is_admin?(t()) :: boolean()
   def is_admin?(%{role: :admin}), do: true
   def is_admin?(_), do: false
+
+  def record_login(user_id, ip_address) do
+    %Login{}
+    |> Login.changeset(%{user_id: user_id, ip_address: ip_address})
+    |> Repo.insert()
+  end
 end

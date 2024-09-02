@@ -23,10 +23,20 @@ defmodule FixxonWeb.Router do
     plug FixxonWeb.EnsureRolePlug, :admin
   end
 
+  pipeline :record do
+    plug FixxonWeb.RecordLoginPlug
+  end
+
   scope "/" do
     pipe_through :browser
 
-    pow_session_routes()
+    resources "/session", Pow.Phoenix.SessionController, singleton: true, only: [:new, :delete]
+  end
+
+  scope "/" do
+    pipe_through [:browser, :record]
+
+    resources "/session", Pow.Phoenix.SessionController, singleton: true, only: [:create]
   end
 
   scope "/", Pow.Phoenix, as: "pow" do

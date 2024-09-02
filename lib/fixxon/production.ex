@@ -33,6 +33,20 @@ defmodule Fixxon.Production do
     )
   end
 
+  def list_today_totals() do
+    date = Date.utc_today() |> Date.to_iso8601()
+    {:ok, start_of_day, _} = "#{date}T00:00:00Z" |> DateTime.from_iso8601()
+
+    Repo.all(
+      from b in Batch,
+        join: u in User,
+        on: b.user_id == u.id,
+        where: b.inserted_at > ^start_of_day,
+        group_by: [u.id, b.button_type],
+        select: %{username: u.username, button_type: b.button_type, count: sum(b.count)}
+    )
+  end
+
   @doc """
   Gets a single batch.
 

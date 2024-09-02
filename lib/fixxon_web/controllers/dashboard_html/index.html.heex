@@ -1,0 +1,11 @@
+<.header>
+  Dashboard
+</.header>
+
+<.table id="dashboard" rows={@totals}>
+  <:col :let={total} label="User">
+    <%= total.username %>
+  </:col>
+  <:col :let={total} label="Button Type"><%= total.button_type %></:col>
+  <:col :let={total} label="Total"><%= total.count %></:col>
+</.table>

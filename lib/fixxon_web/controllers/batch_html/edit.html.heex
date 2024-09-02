@@ -1,0 +1,8 @@
+<.header>
+  Edit Batch
+  <:subtitle>Use this form to correct an existing button batch.</:subtitle>
+</.header>
+
+<.batch_form changeset={@changeset} action={~p"/batches/#{@batch}"} />
+
+<.back navigate={~p"/batches/new"}>Back to batches</.back>

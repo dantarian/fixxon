@@ -3,3 +3,10 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+input.btn[type="radio"] {
+  width: auto;
+}
+
+input.btn[type="radio"]:checked {
+  background-image: none;
+}

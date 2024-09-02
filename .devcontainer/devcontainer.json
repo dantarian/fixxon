@@ -29,7 +29,8 @@
                 "stkb.rewrap",
                 "vscode-icons-team.vscode-icons",
                 "ms-azuretools.vscode-docker",
-                "jakebecker.elixir-ls"
+                "jakebecker.elixir-ls",
+                "phoenixframework.phoenix"
             ],
             "settings": {
                 // General settings

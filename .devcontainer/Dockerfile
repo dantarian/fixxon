@@ -156,6 +156,8 @@ RUN apt-get update -y \
 			erlang-dev \
 			libc-dev \
 			python3-typing-extensions \
+			nodejs \
+			npm \
 		&& rm -r /var/cache/* /var/lib/apt/lists/*
 USER ${USERNAME}
 COPY .ssh.sh /home/${USERNAME}/.ssh.sh

@@ -4,6 +4,7 @@
 const plugin = require("tailwindcss/plugin")
 const fs = require("fs")
 const path = require("path")
+const { default: daisyui } = require("daisyui")
 
 module.exports = {
   content: [
@@ -20,6 +21,7 @@ module.exports = {
   },
   plugins: [
     require("@tailwindcss/forms"),
+    require('daisyui'),
     // Allows prefixing tailwind classes with LiveView classes to add rules
     // only when LiveView classes are applied, for example:
     //
@@ -70,5 +72,16 @@ module.exports = {
         }
       }, { values })
     })
-  ]
+  ],
+  daisyui: {
+    themes: [
+      {
+        fixxon: {
+          ...require("daisyui/src/theming/themes")["light"],
+          primary: "#944596",
+          secondary: "#3f3c3c"
+        }
+      }
+    ]
+  }
 }

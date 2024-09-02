@@ -1,0 +1,52 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Failed to save the batch. Please address the errors below.
+  </.error>
+  <div class="flex flex-ro gap-2">
+    <div class="join shrink grow-0">
+      <input
+        class="join-item btn"
+        type="radio"
+        name="batch[batch_type]"
+        aria-label="Stock"
+        value="stock"
+        checked={f[:batch_type].value == :stock}
+      />
+      <input
+        class="join-item btn"
+        type="radio"
+        name="batch[batch_type]"
+        aria-label="Order"
+        value="order"
+        checked={f[:batch_type].value == :order}
+      />
+      <input
+        class="input input-bordered join-item shrink grow-0 w-36"
+        name="batch[order_number]"
+        type="text"
+        placeholder="Order number"
+        value={f[:order_number].value}
+      />
+    </div>
+    <.input
+      field={f[:button_type]}
+      type="radio-select"
+      options={Ecto.Enum.values(Fixxon.Production.Batch, :button_type)}
+    />
+    <input
+      class="input input-bordered w-32 grow-0"
+      name="batch[count]"
+      type="number"
+      placeholder="Count"
+      value={f[:count].value}
+    />
+    <.button class="btn-primary">Save</.button>
+  </div>
+  <%= for field <- ~w[batch_type order_number button_type count]a, error <- f[field].errors do %>
+    <.error>
+      <%= field |> Atom.to_string() |> String.replace("_", " ") |> String.capitalize() %> <%= translate_error(
+        error
+      ) %>
+    </.error>
+  <% end %>
+</.simple_form>

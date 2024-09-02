@@ -1,0 +1,18 @@
+<.header>
+  Batch <%= @batch.id %>
+  <:subtitle>This is a batch record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/batches/#{@batch}/edit"}>
+      <.button>Edit batch</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Type"><%= @batch.type %></:item>
+  <:item title="Stock"><%= @batch.stock %></:item>
+  <:item title="Order number"><%= @batch.order_number %></:item>
+  <:item title="Count"><%= @batch.count %></:item>
+</.list>
+
+<.back navigate={~p"/batches"}>Back to batches</.back>

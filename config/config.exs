@@ -7,9 +7,16 @@
 # General application configuration
 import Config
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 config :fixxon,
   ecto_repos: [Fixxon.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
+
+# Set up timezone expectations
+config :fixxon,
+  server_tz: "Etc/UTC",
+  display_tz: "Europe/London"
 
 # Configures the endpoint
 config :fixxon, FixxonWeb.Endpoint,

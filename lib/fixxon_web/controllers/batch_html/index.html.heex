@@ -1,0 +1,26 @@
+<.header>
+  Listing Batches
+  <:actions>
+    <.link href={~p"/batches/new"}>
+      <.button>New Batch</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="batches" rows={@batches} row_click={&JS.navigate(~p"/batches/#{&1}")}>
+  <:col :let={batch} label="Type"><%= batch.type %></:col>
+  <:col :let={batch} label="Stock"><%= batch.stock %></:col>
+  <:col :let={batch} label="Order number"><%= batch.order_number %></:col>
+  <:col :let={batch} label="Count"><%= batch.count %></:col>
+  <:action :let={batch}>
+    <div class="sr-only">
+      <.link navigate={~p"/batches/#{batch}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/batches/#{batch}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={batch}>
+    <.link href={~p"/batches/#{batch}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

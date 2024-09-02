@@ -10,24 +10,36 @@
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
       <%= if Pow.Plug.current_user(@conn) do %>
-        Signed in as <span id="user" class="text-brand"><%= Pow.Plug.current_user(@conn).username %></span>
-        <.link href={~p"/session"} method="delete" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">Sign out</.link>
+        Signed in as
+        <span id="user" class="text-brand"><%= Pow.Plug.current_user(@conn).username %></span>
+        <.link href={~p"/session"} method="delete" class="btn">
+          Sign out
+        </.link>
       <% end %>
     </div>
   </div>
   <%= if Fixxon.Users.is_admin?(@current_user) do %>
-    <nav class="bg-gray-200 shadow shadow-gray-300 w-100 px-8 md:px-auto">
-      <ul class="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-center flex-wrap">
-        <li class="text-brand shrink md:order-1 px-4">
-          <span class="text-sm font-semibold leading-6">Dashboard</span>
-        </li>
-        <li class="text-brand shrink md:order-2 px-4">
-          <span class="text-sm font-semibold leading-6">Users</span>
-        </li>
-        <li class="text-brand shrink md:order-3 px-4">
-          <span class="text-sm font-semibold leading-6">Login History</span>
-        </li>
-      </ul>
+    <nav class="navbar">
+      <div class="navbar-start"></div>
+      <div class="navbar-center">
+        <ul class="menu menu-horizontal px-1">
+          <li class="text-brand">
+            <span class="text-sm font-semibold leading-6">
+              <.link href={~p"/batches/new"}>Log Work</.link>
+            </span>
+          </li>
+          <li class="text-brand">
+            <span class="text-sm font-semibold leading-6">Dashboard</span>
+          </li>
+          <li class="text-brand">
+            <span class="text-sm font-semibold leading-6">Users</span>
+          </li>
+          <li class="text-brand">
+            <span class="text-sm font-semibold leading-6">Login History</span>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-end"></div>
     </nav>
   <% end %>
 </header>

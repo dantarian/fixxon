@@ -40,11 +40,15 @@ defmodule FixxonWeb.Router do
   scope "/", FixxonWeb do
     pipe_through [:browser, :protected]
 
-    get "/", PageController, :home
+    resources "/batches", BatchController, only: [:new, :create, :edit, :update]
+
+    get "/", BatchController, :new
   end
 
   scope "/admin", FixxonWeb do
     pipe_through [:browser, :protected, :admin]
+
+    resources "/batches", BatchController
   end
 
   # Other scopes may use custom stacks.

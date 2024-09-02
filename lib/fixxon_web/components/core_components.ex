@@ -231,8 +231,8 @@ defmodule FixxonWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "phx-submit-loading:opacity-75",
+        "btn",
         @class
       ]}
       {@rest}
@@ -276,7 +276,7 @@ defmodule FixxonWeb.CoreComponents do
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file month number password
-               range search select tel text textarea time url week)
+               radio-select range search select tel text textarea time url week)
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -342,6 +342,26 @@ defmodule FixxonWeb.CoreComponents do
         <option :if={@prompt} value=""><%= @prompt %></option>
         <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
       </select>
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
+  def input(%{type: "radio-select"} = assigns) do
+    ~H"""
+    <div>
+      <.label for={@id}><%= @label %></.label>
+      <div class="join">
+        <input
+          :for={option <- @options}
+          class="join-item btn"
+          type="radio"
+          name={@name}
+          value={option}
+          checked={@value == option}
+          aria-label={option |> Atom.to_string() |> String.capitalize()}
+        />
+      </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """

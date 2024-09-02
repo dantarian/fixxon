@@ -1,0 +1,27 @@
+<.header>
+  Add Buttons
+  <:subtitle>Use this form to log a batch of buttons you've made.</:subtitle>
+</.header>
+
+<.batch_form changeset={@changeset} action={~p"/batches"} />
+
+<.header class="mt-10">
+  Previous batches
+</.header>
+
+<.table id="batches" rows={@batches}>
+  <:col :let={batch} label="Time">
+    <FixxonWeb.Time.formatted_time datetime={batch.inserted_at} format={:time} />
+  </:col>
+  <:col :let={batch} label="Batch Type">
+    <%= batch.batch_type |> Atom.to_string() |> String.capitalize() %>
+  </:col>
+  <:col :let={batch} label="Order Number"><%= batch.order_number %></:col>
+  <:col :let={batch} label="Button Type">
+    <%= batch.button_type |> Atom.to_string() |> String.capitalize() %>
+  </:col>
+  <:col :let={batch} label="Count"><%= batch.count %></:col>
+  <:action :let={batch}>
+    <.link navigate={~p"/batches/#{batch}/edit"}>Edit</.link>
+  </:action>
+</.table>

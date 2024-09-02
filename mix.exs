@@ -61,7 +61,9 @@ defmodule Fixxon.MixProject do
       {:bandit, "~> 1.5"},
 
       # Custom deps
-      {:pow, "~> 1.0.38"}
+      {:pow, "~> 1.0.38"},
+      {:calendar, "~>1.0.0"},
+      {:tzdata, "~>1.1"}
     ]
   end
 

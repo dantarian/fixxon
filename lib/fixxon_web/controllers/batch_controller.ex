@@ -45,7 +45,7 @@ defmodule FixxonWeb.BatchController do
     batch = Production.get_batch!(id)
 
     case Production.update_batch(batch, batch_params) do
-      {:ok, batch} ->
+      {:ok, _batch} ->
         conn
         |> put_flash(:info, "Batch updated successfully.")
         |> redirect(to: ~p"/batches/new")

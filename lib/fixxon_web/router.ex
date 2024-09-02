@@ -59,6 +59,7 @@ defmodule FixxonWeb.Router do
     pipe_through [:browser, :protected, :admin]
 
     resources "/batches", BatchController
+    get "/logins", LoginHistoryController, :index
   end
 
   # Other scopes may use custom stacks.

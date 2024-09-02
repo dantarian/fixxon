@@ -1,0 +1,11 @@
+<.header>
+  Login History
+</.header>
+
+<.table id="logins" rows={@logins}>
+  <:col :let={login} label="Time">
+    <FixxonWeb.Time.formatted_time datetime={login.inserted_at} />
+  </:col>
+  <:col :let={login} label="User"><%= login.username %></:col>
+  <:col :let={login} label="IP Address"><%= login.ip_address %></:col>
+</.table>

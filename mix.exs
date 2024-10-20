@@ -63,7 +63,8 @@ defmodule Fixxon.MixProject do
       # Custom deps
       {:pow, "~> 1.0.38"},
       {:calendar, "~>1.0.0"},
-      {:tzdata, "~>1.1"}
+      {:tzdata, "~>1.1"},
+      {:json_serde, "~>1.1.1"}
     ]
   end
 

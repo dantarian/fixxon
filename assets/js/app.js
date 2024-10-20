@@ -21,6 +21,7 @@ import "phoenix_html"
 import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import Chart, { registerables } from "chart.js/auto";
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
@@ -42,6 +43,7 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// Form upates on the Batch form
 const orderNumberHandler = () => {
   const radio = document.querySelector('[name="batch[batch_type]"][value="order"]');
   const input = document.querySelector('[name="batch[order_number]');
@@ -64,3 +66,70 @@ document.addEventListener('change', (event) => {
     orderNumberHandler();
   }
 });
+
+// Dashboard charts
+const canvas = document.querySelector('canvas#chart');
+const dataString = canvas?.dataset.points;
+if (dataString) {
+  const data = JSON.parse(dataString)
+  const chartData = {
+    datasets: [
+      {
+        label: 'Total',
+        data,
+        borderColor: 'rgb(148, 69, 150)',
+        backgroundColor: 'rgba(148, 69, 150, 0.6)',
+        parsing: {
+          yAxisKey: 'username',
+          xAxisKey: 'total'
+        }
+      },
+      {
+        label: 'Numbers',
+        data,
+        borderColor: 'rgb(50, 100, 255)',
+        backgroundColor: 'rgba(50, 100, 255, 0.6)',
+        parsing: {
+          yAxisKey: 'username',
+          xAxisKey: 'numbers'
+        }
+      },
+      {
+        label: 'Names',
+        data,
+        borderColor: 'rgb(255, 50, 50)',
+        backgroundColor: 'rgba(255, 50, 50, 0.6)',
+        parsing: {
+          yAxisKey: 'username',
+          xAxisKey: 'names'
+        }
+      },
+    ]
+  };
+
+  const chartConfig = {
+    type: 'bar',
+    data: chartData,
+    options: {
+      indexAxis: 'y',
+      elements: {
+        bar: {
+          grouped: true,
+          borderWidth: 0,
+        }
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'right',
+        },
+        title: {
+          display: true,
+          text: 'Button production - today'
+        }
+      }
+    }
+  };
+
+  new Chart(document.getElementById('chart'), chartConfig);
+}

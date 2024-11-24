@@ -7,16 +7,17 @@ defmodule Fixxon.ProductionFixtures do
   @doc """
   Generate a batch.
   """
-  def batch_fixture(attrs \\ %{}) do
+  def batch_fixture(user = %Fixxon.Users.User{}, attrs \\ %{}) do
     {:ok, batch} =
       attrs
       |> Enum.into(%{
         count: 42,
         order_number: "some order_number",
         stock: true,
-        type: :names
+        button_type: :names,
+        batch_type: :order
       })
-      |> Fixxon.Production.create_batch()
+      |> Fixxon.Production.create_batch(user)
 
     batch
   end

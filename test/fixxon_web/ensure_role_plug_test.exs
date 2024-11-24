@@ -4,15 +4,15 @@ defmodule FixxonWeb.EnsureRolePlugTest do
   alias FixxonWeb.EnsureRolePlug
 
   @opts ~w(admin)a
-  @user %{id: 1, role: "user"}
-  @admin %{id: 2, role: "admin"}
+  @user %{id: 1, role: :user}
+  @admin %{id: 2, role: :admin}
 
   setup do
     conn =
       build_conn()
       |> Plug.Conn.put_private(:plug_session, %{})
       |> Plug.Conn.put_private(:plug_session_fetch, :done)
-      |> Pow.Plug.put_config(otp_app: :my_app)
+      |> Pow.Plug.put_config(otp_app: :fixxon)
       |> fetch_flash()
 
     {:ok, conn: conn}
@@ -31,7 +31,7 @@ defmodule FixxonWeb.EnsureRolePlugTest do
 
     conn =
       conn
-      |> Pow.Plug.assign_current_user(@user, otp_app: :my_app)
+      |> Pow.Plug.assign_current_user(@user, otp_app: :fixxon)
       |> EnsureRolePlug.call(opts)
 
     assert conn.halted
@@ -43,7 +43,7 @@ defmodule FixxonWeb.EnsureRolePlugTest do
 
     conn =
       conn
-      |> Pow.Plug.assign_current_user(@user, otp_app: :my_app)
+      |> Pow.Plug.assign_current_user(@user, otp_app: :fixxon)
       |> EnsureRolePlug.call(opts)
 
     refute conn.halted
@@ -54,7 +54,7 @@ defmodule FixxonWeb.EnsureRolePlugTest do
 
     conn =
       conn
-      |> Pow.Plug.assign_current_user(@admin, otp_app: :my_app)
+      |> Pow.Plug.assign_current_user(@admin, otp_app: :fixxon)
       |> EnsureRolePlug.call(opts)
 
     refute conn.halted

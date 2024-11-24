@@ -4,11 +4,6 @@ defmodule FixxonWeb.BatchController do
   alias Fixxon.Production
   alias Fixxon.Production.Batch
 
-  def index(conn, _params) do
-    batches = Production.list_batches()
-    render(conn, :index, batches: batches)
-  end
-
   def new(conn, _params) do
     changeset = Production.change_batch(%Batch{})
     batches = Production.list_today_batches_for_user(Pow.Plug.current_user(conn))
@@ -28,11 +23,6 @@ defmodule FixxonWeb.BatchController do
         batches = Production.list_today_batches_for_user(current_user)
         render(conn, :new, changeset: changeset, batches: batches, page_title: "Log Work")
     end
-  end
-
-  def show(conn, %{"id" => id}) do
-    batch = Production.get_batch!(id)
-    render(conn, :show, batch: batch)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -61,6 +51,6 @@ defmodule FixxonWeb.BatchController do
 
     conn
     |> put_flash(:info, "Batch deleted successfully.")
-    |> redirect(to: ~p"/batches")
+    |> redirect(to: ~p"/batches/new")
   end
 end

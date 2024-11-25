@@ -10,14 +10,6 @@ defmodule FixxonWeb.DashboardController do
     )
   end
 
-  def data(conn, _params) do
-    totals = Fixxon.Production.list_today_totals()
-
-    conn
-    |> put_view(json: DashboardJSON)
-    |> render(:data, totals: totals)
-  end
-
   defp aggregate(data), do: do_aggregate(data, %{})
 
   defp do_aggregate([], result), do: result

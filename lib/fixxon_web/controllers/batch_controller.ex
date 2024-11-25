@@ -44,13 +44,4 @@ defmodule FixxonWeb.BatchController do
         render(conn, :edit, batch: batch, changeset: changeset)
     end
   end
-
-  def delete(conn, %{"id" => id}) do
-    batch = Production.get_batch!(id)
-    {:ok, _batch} = Production.delete_batch(batch)
-
-    conn
-    |> put_flash(:info, "Batch deleted successfully.")
-    |> redirect(to: ~p"/batches/new")
-  end
 end

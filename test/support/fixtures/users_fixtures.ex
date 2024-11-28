@@ -19,4 +19,8 @@ defmodule Fixxon.UsersFixtures do
 
     user
   end
+
+  def login_fixture(%{id: id}, ip \\ "192.168.0.1") do
+    Fixxon.Users.record_login(id, ip)
+  end
 end

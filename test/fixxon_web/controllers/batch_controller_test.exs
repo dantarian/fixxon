@@ -71,7 +71,7 @@ defmodule FixxonWeb.BatchControllerTest do
   end
 
   defp create_user(_) do
-    user = admin_user_fixture()
+    user = user_fixture()
     %{user: user}
   end
 

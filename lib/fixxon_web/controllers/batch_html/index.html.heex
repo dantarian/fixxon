@@ -13,9 +13,6 @@
   <:col :let={batch} label="Order number"><%= batch.order_number %></:col>
   <:col :let={batch} label="Count"><%= batch.count %></:col>
   <:action :let={batch}>
-    <div class="sr-only">
-      <.link navigate={~p"/batches/#{batch}"}>Show</.link>
-    </div>
     <.link navigate={~p"/batches/#{batch}/edit"}>Edit</.link>
   </:action>
   <:action :let={batch}>

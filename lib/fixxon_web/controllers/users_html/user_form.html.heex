@@ -1,0 +1,11 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Failed to save the user. Please address the errors below.
+  </.error>
+
+  <.input field={f[:username]} label="Username" />
+  <.input field={f[:password]} type="password" label="Password" />
+  <.input field={f[:password_confirmation]} type="password" label="Confirm password" />
+
+  <.button class="btn-primary">Save</.button>
+</.simple_form>

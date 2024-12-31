@@ -5,6 +5,22 @@ defmodule Fixxon.UsersFixtures do
   """
 
   @doc """
+  Generate a non-Admin user.
+  """
+  def user_fixture(attrs \\ %{}) do
+    {:ok, user} =
+      attrs
+      |> Enum.into(%{
+        username: "user" <> Ecto.UUID.generate(),
+        password: "password",
+        password_confirmation: "password"
+      })
+      |> Fixxon.Users.create()
+
+    user
+  end
+
+  @doc """
   Generate an Admin user.
   """
   def admin_user_fixture(attrs \\ %{}) do

@@ -61,6 +61,7 @@ defmodule FixxonWeb.Router do
     resources "/batches", BatchController
     get "/logins", LoginHistoryController, :index
     get "/dashboard", DashboardController, :index
+    resources "/users", UsersController
   end
 
   # Other scopes may use custom stacks.

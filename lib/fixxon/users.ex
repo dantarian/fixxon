@@ -4,6 +4,24 @@ defmodule Fixxon.Users do
 
   @type t :: %User{}
 
+  def change_user(user = %User{}, params \\ %{}), do: User.changeset(user, params)
+
+  @spec list_users() :: [t()]
+  def list_users() do
+    Repo.all(from u in User, order_by: u.username)
+  end
+
+  def get_user!(id) do
+    Repo.get!(User, id)
+  end
+
+  @spec create(map()) :: {:ok, t()} | {:error, Ecto.Changeset.t()}
+  def create(params) do
+    %User{}
+    |> User.changeset(params)
+    |> Repo.insert()
+  end
+
   @spec create_admin(map()) :: {:ok, t()} | {:error, Ecto.Changeset.t()}
   def create_admin(params) do
     %User{}
@@ -29,6 +47,8 @@ defmodule Fixxon.Users do
   @spec is_admin?(t()) :: boolean()
   def is_admin?(%{role: :admin}), do: true
   def is_admin?(_), do: false
+
+  def delete_user(user), do: user |> Repo.delete()
 
   def record_login(user_id, ip_address) do
     %Login{}

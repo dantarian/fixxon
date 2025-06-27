@@ -3,9 +3,11 @@
     Failed to save the user. Please address the errors below.
   </.error>
 
-  <.input field={f[:username]} label="Username" />
+  <.input field={f[:username]} type="text" label="Username" />
   <.input field={f[:password]} type="password" label="Password" />
   <.input field={f[:password_confirmation]} type="password" label="Confirm password" />
 
-  <.button class="btn-primary">Save</.button>
+  <:actions>
+    <.button>Save User</.button>
+  </:actions>
 </.simple_form>

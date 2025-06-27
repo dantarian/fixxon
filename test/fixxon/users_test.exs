@@ -1,9 +1,16 @@
 defmodule Fixxon.UsersTest do
   use Fixxon.DataCase
 
-  alias Fixxon.{Repo, Users, Users.User, UsersFixtures}
+  alias Fixxon.{Repo, Users, Users.User, UsersFixtures, ProductionFixtures}
 
   @valid_params %{username: "user1", password: "secret1234", password_confirmation: "secret1234"}
+  @valid_update_params %{
+    username: "updated user"
+  }
+  @valid_password_update_params %{
+    password: "newsecret1",
+    password_confirmation: "newsecret1"
+  }
 
   describe "list_users/0" do
     test "with no data" do
@@ -53,6 +60,76 @@ defmodule Fixxon.UsersTest do
     assert user.role == :admin
   end
 
+  describe "get_user!/1" do
+    setup [:create_user]
+
+    test "with valid id", %{user: user} do
+      assert ^user = Users.get_user!(user.id)
+    end
+
+    test "with unknown id" do
+      assert_raise Ecto.NoResultsError, fn -> Users.get_user!(Ecto.UUID.generate()) end
+    end
+  end
+
+  describe "update/2" do
+    setup [:create_user]
+
+    test "with valid parameters", %{user: user} do
+      assert {:ok, user} = Users.update(user, @valid_update_params)
+      assert user.username == "updated user"
+    end
+  end
+
+  describe "update_password/2" do
+    setup [:create_user]
+
+    test "with valid parameters", %{user: user} do
+      assert {:ok, updated_user} = Users.update_password(user, @valid_password_update_params)
+      assert user.password_hash != updated_user.password_hash
+    end
+
+    test "with invalid password", %{user: user} do
+      assert {:error, _} =
+               Users.update_password(user, %{
+                 password: "2short",
+                 password_confirmation: "2short"
+               })
+    end
+
+    test "with non-matching password", %{user: user} do
+      assert {:error, _} =
+               Users.update_password(user, %{
+                 password: "secret1234",
+                 password_confirmation: "secret123"
+               })
+    end
+
+    test "without changing password", %{user: user} do
+      assert {:error, _} = Users.update_password(user, %{})
+    end
+  end
+
+  describe "delete_user/1" do
+    setup [:create_user]
+
+    test "user is deleted", %{user: user} do
+      assert {:ok, _} = Users.delete_user(user)
+      assert_raise Ecto.NoResultsError, fn -> Users.get_user!(user.id) end
+    end
+
+    test "user with logins is deleted", %{user: user} do
+      assert {:ok, _login} = Users.record_login(user.id, "192.168.0.1")
+      assert {:ok, _} = Users.delete_user(user)
+      assert_raise Ecto.NoResultsError, fn -> Users.get_user!(user.id) end
+    end
+
+    test "user with batches is not deleted", %{user: user} do
+      ProductionFixtures.batch_fixture(user)
+      assert {:error, _} = Users.delete_user(user)
+    end
+  end
+
   test "set_admin_role/1 and set_user_role/1" do
     assert {:ok, user} = Repo.insert(User.changeset(%User{}, @valid_params))
     assert user.role == :user
@@ -62,6 +139,17 @@ defmodule Fixxon.UsersTest do
 
     assert {:ok, user} = Users.set_user_role(user)
     assert user.role == :user
+  end
+
+  test "activate_user/1 and deactivate_user/1" do
+    assert {:ok, user} = Repo.insert(User.changeset(%User{}, @valid_params))
+    assert user.active
+
+    assert {:ok, user} = Users.deactivate_user(user)
+    refute user.active
+
+    assert {:ok, user} = Users.activate_user(user)
+    assert user.active
   end
 
   test "is_admin?/1" do
@@ -84,5 +172,10 @@ defmodule Fixxon.UsersTest do
              [%{inserted_at: _, username: ^username, ip_address: "192.168.0.1"}],
              Users.list_logins()
            )
+  end
+
+  defp create_user(_) do
+    user = UsersFixtures.user_fixture()
+    %{user: user}
   end
 end

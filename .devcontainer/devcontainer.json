@@ -10,7 +10,7 @@
         "database"
     ],
     "shutdownAction": "stopCompose",
-    "postCreateCommand": "~/.ssh.sh",
+    "postCreateCommand": "pre-commit install --hook-type commit-msg",
     "workspaceFolder": "/workspace",
     // "overrideCommand": "",
     "customizations": {
@@ -38,8 +38,17 @@
                 // Docker
                 "remote.extensionKind": {
                     "ms-azuretools.vscode-docker": "workspace"
-                }
+                },
+                // Format on save
+                "editor.formatOnSave": true,
+                // Ruler (matching `mix format`)
+                "editor.rulers": [
+                    100
+                ]
             }
         }
-    }
+    },
+    "mounts": [
+        "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly"
+    ]
 }

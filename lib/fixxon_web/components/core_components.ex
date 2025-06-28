@@ -350,7 +350,9 @@ defmodule FixxonWeb.CoreComponents do
   def input(%{type: "radio-select"} = assigns) do
     ~H"""
     <div>
+      <%= if is_binary(@label) && String.trim(@label) != "" do %>
       <.label for={@id}><%= @label %></.label>
+      <% end %>
       <div class="join">
         <input
           :for={option <- @options}

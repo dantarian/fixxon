@@ -76,10 +76,11 @@ defmodule Fixxon.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      setup: ["deps.get", "npmdeps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "npmdeps.get": ["cmd npm --prefix ./assets ci --progress=false --no-audit --loglevel=error"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind fixxon", "esbuild fixxon"],
       "assets.deploy": [

@@ -36,7 +36,14 @@ RUN apt-get update -y \
 	pre-commit \
 	pipx \
 	zsh \
+	vim \
+	inotify-tools \
 	&& rm -r /var/cache/* /var/lib/apt/lists/*
+
+# Install Node
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
+	&& apt-get update && apt-get install -y nodejs \
+	&& apt-get clean
 
 # Set up project folder
 ENV APP_HOME=/app

@@ -17,7 +17,7 @@ defmodule FixxonWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import FixxonWeb.Gettext
+  use Gettext, backend: FixxonWeb.Gettext
 
   @doc """
   Renders a modal.

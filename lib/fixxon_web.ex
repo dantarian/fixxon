@@ -43,7 +43,7 @@ defmodule FixxonWeb do
         layouts: [html: FixxonWeb.Layouts]
 
       import Plug.Conn
-      import FixxonWeb.Gettext
+      use Gettext, backend: FixxonWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -85,7 +85,7 @@ defmodule FixxonWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import FixxonWeb.CoreComponents
-      import FixxonWeb.Gettext
+      use Gettext, backend: FixxonWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

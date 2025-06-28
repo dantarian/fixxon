@@ -30,7 +30,8 @@
                 "vscode-icons-team.vscode-icons",
                 "ms-azuretools.vscode-docker",
                 "jakebecker.elixir-ls",
-                "phoenixframework.phoenix"
+                "phoenixframework.phoenix",
+                "saoudrizwan.claude-dev"
             ],
             "settings": {
                 // General settings

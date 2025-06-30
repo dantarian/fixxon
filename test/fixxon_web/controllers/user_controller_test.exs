@@ -10,6 +10,9 @@ defmodule FixxonWeb.UserControllerTest do
   }
   @update_attrs %{username: "some updated name"}
   @invalid_attrs %{username: nil}
+  @admin_role_attrs %{role: "admin"}
+  @non_admin_role_attrs %{role: "user"}
+  @invalid_role_attrs %{role: "unknown"}
 
   describe "index" do
     setup [:create_admin_user, :authenticate_as_admin]
@@ -33,11 +36,11 @@ defmodule FixxonWeb.UserControllerTest do
     setup [:create_admin_user, :authenticate_as_admin]
 
     test "redirects to list when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/admin/users", user: @create_attrs)
-      assert redirected_to(conn) == ~p"/admin/users"
+      response_conn = post(conn, ~p"/admin/users", user: @create_attrs)
+      assert redirected_to(response_conn) == ~p"/admin/users"
 
-      conn = get(conn, ~p"/admin/users")
-      assert html_response(conn, 200) =~ "some name"
+      response_conn = get(conn, ~p"/admin/users")
+      assert html_response(response_conn, 200) =~ "some name"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -59,11 +62,11 @@ defmodule FixxonWeb.UserControllerTest do
     setup [:create_admin_user, :authenticate_as_admin, :create_user]
 
     test "redirects when data is valid", %{conn: conn, user: user} do
-      conn = put(conn, ~p"/admin/users/#{user}", user: @update_attrs)
-      assert redirected_to(conn) == ~p"/admin/users"
+      response_conn = put(conn, ~p"/admin/users/#{user}", user: @update_attrs)
+      assert redirected_to(response_conn) == ~p"/admin/users"
 
-      conn = get(conn, ~p"/admin/users")
-      assert html_response(conn, 200) =~ "some updated name"
+      response_conn = get(conn, ~p"/admin/users")
+      assert html_response(response_conn, 200) =~ "some updated name"
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
@@ -72,16 +75,43 @@ defmodule FixxonWeb.UserControllerTest do
     end
   end
 
+  describe "update role" do
+    setup [:create_admin_user, :authenticate_as_admin, :create_user, :create_other_admin_user]
+
+    test "redirects when role is updated", %{conn: conn, user: user} do
+      response_conn = patch(conn, ~p"/admin/users/#{user}/role", user: @admin_role_attrs)
+      assert redirected_to(response_conn) == ~p"/admin/users"
+
+      response_conn = get(conn, ~p"/admin/users")
+      assert {:ok, document} = html_response(response_conn, 200) |> Floki.parse_document()
+      cell = document |> Floki.find("#user-row-#{user.id} td:nth-child(2)") |> Floki.raw_html()
+      assert cell =~ "Demote"
+    end
+
+    # test "renders errors when data is invalid", %{conn: conn, user: user} do
+    #   conn = put(conn, ~p"/admin/users/#{user}", user: @invalid_attrs)
+    #   assert html_response(conn, 200) =~ "Edit User"
+    # end
+  end
+
   describe "delete user" do
     setup [:create_admin_user, :authenticate_as_admin, :create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete(conn, ~p"/admin/users/#{user}")
-      assert redirected_to(conn) == ~p"/admin/users"
+      response_conn = delete(conn, ~p"/admin/users/#{user}")
+      assert redirected_to(response_conn) == ~p"/admin/users"
 
-      assert_error_sent 404, fn ->
+      assert_error_sent :not_found, fn ->
         delete(conn, ~p"/admin/users/#{user}")
       end
+    end
+
+    test "renders errors when user attempts to delete themselves", %{conn: conn, admin_user: user} do
+      response_conn = delete(conn, ~p"/admin/users/#{user}")
+      assert redirected_to(response_conn) == ~p"/admin/users"
+
+      assert %{"error" => "You cannot perform this operation on yourself."} =
+               response_conn.assigns.flash
     end
   end
 
@@ -98,5 +128,10 @@ defmodule FixxonWeb.UserControllerTest do
   defp create_admin_user(_) do
     user = admin_user_fixture()
     %{admin_user: user}
+  end
+
+  defp create_other_admin_user(_) do
+    user = admin_user_fixture()
+    %{other_admin_user: user}
   end
 end

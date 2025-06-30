@@ -1,9 +1,10 @@
-defmodule FixxonWeb.UsersController do
+defmodule FixxonWeb.UserController do
   use FixxonWeb, :controller
 
   alias Fixxon.{Users, Users.User}
 
-  plug :prevent_modify_current_user when action in [:make_admin, :deactivate, :delete]
+  plug :prevent_modify_current_user
+       when action in [:update_role, :update_state, :delete]
 
   def index(conn, _params) do
     users = Users.list_users()
@@ -67,10 +68,17 @@ defmodule FixxonWeb.UsersController do
     end
   end
 
-  def make_admin(conn, %{"id" => id}) do
+  def update_role(conn, %{"id" => id, "user" => user_params}) do
     user = Users.get_user!(id)
 
-    case Users.set_admin_role(user) do
+    updateUser =
+      case user_params["role"] do
+        "admin" -> &Users.set_admin_role/1
+        "user" -> &Users.set_user_role/1
+        _ -> fn _ -> {:error, User.role_changeset(user, user_params)} end
+      end
+
+    case updateUser.(user) do
       {:ok, _user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
@@ -81,38 +89,17 @@ defmodule FixxonWeb.UsersController do
     end
   end
 
-  def make_non_admin(conn, %{"id" => id}) do
+  def update_state(conn, %{"id" => id, "user" => user_params}) do
     user = Users.get_user!(id)
 
-    case Users.set_user_role(user) do
-      {:ok, _user} ->
-        conn
-        |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: ~p"/admin/users")
+    updateUser =
+      case user_params.state do
+        "active" -> &Users.activate_user/1
+        "inactive" -> &Users.deactivate_user/1
+        _ -> fn _ -> {:error, User.active_changeset(user, user_params)} end
+      end
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, user: user, changeset: changeset)
-    end
-  end
-
-  def activate(conn, %{"id" => id}) do
-    user = Users.get_user!(id)
-
-    case Users.activate_user(user) do
-      {:ok, _user} ->
-        conn
-        |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: ~p"/admin/users")
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, user: user, changeset: changeset)
-    end
-  end
-
-  def deactivate(conn, %{"id" => id}) do
-    user = Users.get_user!(id)
-
-    case Users.deactivate_user(user) do
+    case updateUser.(user) do
       {:ok, _user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
@@ -125,13 +112,19 @@ defmodule FixxonWeb.UsersController do
 
   def delete(conn, %{"id" => id}) do
     {:ok, _} = Users.get_user!(id) |> Users.delete_user()
-    conn |> put_flash(:info, "User deleted successfully.") |> redirect(~p"/admin/users")
+    conn |> put_flash(:info, "User deleted successfully.") |> redirect(to: ~p"/admin/users")
   end
 
   defp prevent_modify_current_user(conn, _opts) do
     current_user = Pow.Plug.current_user(conn)
     %{"id" => user_id} = conn.params
 
-    if current_user.id == user_id, do: conn |> put_status(:conflict) |> halt(), else: conn
+    if current_user.id == user_id,
+      do:
+        conn
+        |> put_flash(:error, "You cannot perform this operation on yourself.")
+        |> redirect(to: ~p"/admin/users")
+        |> halt(),
+      else: conn
   end
 end

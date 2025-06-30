@@ -2,11 +2,36 @@
   Users
 </.header>
 
-<.table id="users" rows={@users}>
-  <:col :let={user} label="Username"><%= user.username %></:col>
-  <:col :let={user} label="Role"><%= user.role %></:col>
+<.table id="users" rows={@users} row_id={fn user -> "user-row-#{user.id}" end}>
+  <:col :let={user} label="Username">
+    <.link navigate={~p"/admin/users/#{user}/edit"}>{user.username}</.link>
+  </:col>
+  <:col :let={user} label="Role">
+    <div class="value min-w-xs inline-block">{user.role}</div>
+    <%= if user !== @current_user do %>
+      <%= if user.role == :admin do %>
+        <form method="post" action={~p"/admin/users/#{user}/role"} class="inline">
+          <input name="_method" type="hidden" hidden="" value="patch" />
+          <input name="_csrf_token" type="hidden" hidden="" value={get_csrf_token()} />
+          <input name="user[role]" type="hidden" hidden="" id="user_role" value="user" />
+          <.button class="btn btn-sm btn-square tooltip" data-tip="Demote">
+            <.icon name="hero-chevron-double-down" />
+          </.button>
+        </form>
+      <% else %>
+        <form method="post" action={~p"/admin/users/#{user}/role"} class="inline">
+          <input name="_method" type="hidden" hidden="" value="patch" />
+          <input name="_csrf_token" type="hidden" hidden="" value={get_csrf_token()} />
+          <input name="user[role]" type="hidden" hidden="" id="user_role" value="admin" />
+          <.button class="btn btn-sm btn-square tooltip" data-tip="Promote">
+            <.icon name="hero-chevron-double-up" />
+          </.button>
+        </form>
+      <% end %>
+    <% end %>
+  </:col>
   <:action :let={user}>
-    <.link navigate={~p"/admin/users/#{user}/edit"}>Edit</.link>
+    <.link navigate={~p"/admin/users/#{user}/edit_password"}>Change password</.link>
   </:action>
   <:action :let={user}>
     <.link

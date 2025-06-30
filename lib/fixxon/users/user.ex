@@ -69,4 +69,12 @@ defmodule Fixxon.Users.User do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.no_assoc_constraint(:batches)
   end
+
+  def validate_changed(cs, field) do
+    if Map.has_key?(cs.changes, field) do
+      cs
+    else
+      Ecto.Changeset.add_error(cs, field, "didn't change")
+    end
+  end
 end

@@ -17,6 +17,10 @@ defmodule Fixxon.Users.User do
 
     pow_user_fields()
 
+    embeds_one :metadata, Metadata, load_in_query: false do
+      field :has_batches, :boolean
+    end
+
     timestamps()
   end
 

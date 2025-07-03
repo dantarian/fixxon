@@ -2,46 +2,102 @@
   Users
 </.header>
 
+<p class="alert">
+  <.icon name="hero-information-circle" />
+  Note: Users with logged work cannot be deleted, but can be deactivated.
+</p>
+
 <.table id="users" rows={@users} row_id={fn user -> "user-row-#{user.id}" end}>
   <:col :let={user} label="Username">
-    <.link navigate={~p"/admin/users/#{user}/edit"}>{user.username}</.link>
+    {user.username}
   </:col>
   <:col :let={user} label="Role">
-    <div class="value min-w-xs inline-block">{user.role}</div>
-    <%= if user !== @current_user do %>
-      <%= if user.role == :admin do %>
-        <form method="post" action={~p"/admin/users/#{user}/role"} class="inline">
-          <input name="_method" type="hidden" hidden="" value="patch" />
-          <input name="_csrf_token" type="hidden" hidden="" value={get_csrf_token()} />
-          <input name="user[role]" type="hidden" hidden="" id="user_role" value="user" />
-          <.button class="btn btn-sm btn-square tooltip" data-tip="Demote">
-            <.icon name="hero-chevron-double-down" />
-          </.button>
-        </form>
+    <div class="inline-block min-w-12">
+      {user.role |> Atom.to_string() |> String.capitalize()}
+    </div>
+  </:col>
+  <:col :let={user} label="State">
+    <div class="inline-block min-w-16">
+      <%= if user.active do %>
+        Active
       <% else %>
-        <form method="post" action={~p"/admin/users/#{user}/role"} class="inline">
-          <input name="_method" type="hidden" hidden="" value="patch" />
-          <input name="_csrf_token" type="hidden" hidden="" value={get_csrf_token()} />
-          <input name="user[role]" type="hidden" hidden="" id="user_role" value="admin" />
-          <.button class="btn btn-sm btn-square tooltip" data-tip="Promote">
-            <.icon name="hero-chevron-double-up" />
-          </.button>
-        </form>
+        Inactive
       <% end %>
-    <% end %>
+    </div>
   </:col>
   <:action :let={user}>
-    <.link navigate={~p"/admin/users/#{user}/edit_password"}>Change password</.link>
+    <form method="get" action={~p"/admin/users/#{user}/edit"} class="inline">
+      <.button class="btn btn-sm btn-square tooltip" data-tip="Edit username">
+        <.icon name="hero-pencil-square" />
+      </.button>
+    </form>
   </:action>
   <:action :let={user}>
-    <.link
-      href={~p"/admin/users/#{user}"}
-      method="delete"
-      data-confirm="Are you sure? This will remove all work logged by this user."
-    >
-      Delete
-    </.link>
+    <form method="get" action={~p"/admin/users/#{user}/password"} class="inline">
+      <.button class="btn btn-sm btn-square tooltip" data-tip="Change password">
+        <.icon name="hero-identification" />
+      </.button>
+    </form>
+  </:action>
+  <:action :let={user}>
+    <form method="post" action={~p"/admin/users/#{user}/role"} class="inline">
+      <input name="_method" type="hidden" hidden="" value="patch" />
+      <input name="_csrf_token" type="hidden" hidden="" value={get_csrf_token()} />
+      <%= if user.role == :admin do %>
+        <input name="user[role]" type="hidden" hidden="" id="user_role" value="user" />
+        <.button
+          class={"btn btn-sm btn-square tooltip #{if user.id == @current_user.id do "btn-disabled" end}"}
+          data-tip="Demote"
+        >
+          <.icon name="hero-chevron-double-down" />
+        </.button>
+      <% else %>
+        <input name="user[role]" type="hidden" hidden="" id="user_role" value="admin" />
+        <.button
+          class={"btn btn-sm btn-square tooltip #{if user.id == @current_user.id do "btn-disabled" end}"}
+          data-tip="Promote"
+        >
+          <.icon name="hero-chevron-double-up" />
+        </.button>
+      <% end %>
+    </form>
+  </:action>
+  <:action :let={user}>
+    <form method="post" action={~p"/admin/users/#{user}/state"} class="inline">
+      <input name="_method" type="hidden" hidden="" value="patch" />
+      <input name="_csrf_token" type="hidden" hidden="" value={get_csrf_token()} />
+      <%= if user.active do %>
+        <input name="user[state]" type="hidden" hidden="" id="user_state" value="inactive" />
+        <.button
+          class={"btn btn-sm btn-square tooltip #{if user.id == @current_user.id do "btn-disabled" end}"}
+          data-tip="Deactivate"
+        >
+          <.icon name="hero-lock-closed" />
+        </.button>
+      <% else %>
+        <input name="user[state]" type="hidden" hidden="" id="user_state" value="active" />
+        <.button
+          class={"btn btn-sm btn-square tooltip #{if user.id == @current_user.id do "btn-disabled" end}"}
+          data-tip="Activate"
+        >
+          <.icon name="hero-lock-open" />
+        </.button>
+      <% end %>
+    </form>
+  </:action>
+  <:action :let={user}>
+    <form method="post" action={~p"/admin/users/#{user}"} class="inline">
+      <input name="_method" type="hidden" hidden="" value="delete" />
+      <input name="_csrf_token" type="hidden" hidden="" value={get_csrf_token()} />
+      <.button
+        data-confirm="Are you sure? This will remove the user and all records of their logins."
+        class={"btn btn-sm btn-square tooltip #{if user.id == @current_user.id || user.metadata.has_batches do "btn-disabled" end}"}
+        data-tip="Delete"
+      >
+        <.icon name="hero-trash" />
+      </.button>
+    </form>
   </:action>
 </.table>
 
-<.link class="btn btn-primary" href={~p"/admin/users/new"}>Add user</.link>
+<.link class="btn btn-primary mt-5" href={~p"/admin/users/new"}>Add user</.link>

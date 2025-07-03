@@ -1,5 +1,5 @@
 defmodule Fixxon.Users do
-  alias Fixxon.{Repo, Users.User, Users.Login}
+  alias Fixxon.{Repo, Users.User, Users.Login, Production.Batch}
   import Ecto.Query, warn: false
 
   @type t :: %User{}
@@ -55,7 +55,26 @@ defmodule Fixxon.Users do
   """
   @spec list_users() :: [t()]
   def list_users() do
-    Repo.all(from u in User, order_by: u.username)
+    Repo.all(
+      from u in User,
+        as: :user,
+        order_by: u.username,
+        left_join: b in Batch,
+        on: b.user_id == u.id,
+        group_by: u.id,
+        select: %{
+          u
+          | metadata: %User.Metadata{
+              has_batches:
+                exists(
+                  from b in Batch,
+                    where: b.user_id == parent_as(:user).id,
+                    limit: 1,
+                    select: 1
+                )
+            }
+        }
+    )
   end
 
   @doc """

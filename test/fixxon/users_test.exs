@@ -19,14 +19,23 @@ defmodule Fixxon.UsersTest do
 
     test "with data" do
       user = UsersFixtures.user_fixture()
-      assert [^user] = Users.list_users()
+      user_id = user.id
+      assert [%User{id: ^user_id}] = Users.list_users()
     end
 
     test "results come back in alphabetical order of username" do
-      user1 = UsersFixtures.user_fixture(%{username: "zorro"})
-      user2 = UsersFixtures.user_fixture(%{username: "nobody"})
-      user3 = UsersFixtures.user_fixture(%{username: "alan"})
-      assert [^user3, ^user2, ^user1] = Users.list_users()
+      user1name = "zorro"
+      user2name = "nobody"
+      user3name = "alan"
+      UsersFixtures.user_fixture(%{username: user1name})
+      UsersFixtures.user_fixture(%{username: user2name})
+      UsersFixtures.user_fixture(%{username: user3name})
+
+      assert [
+               %User{username: ^user3name},
+               %User{username: ^user2name},
+               %User{username: ^user1name}
+             ] = Users.list_users()
     end
   end
 

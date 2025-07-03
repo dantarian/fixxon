@@ -1,8 +1,18 @@
 <.header>
-  Edit User <%= @user.username %>
+  Edit User {@user.username}
   <:subtitle>Use this form to manage user records in your database.</:subtitle>
 </.header>
 
-<.user_form changeset={@changeset} action={~p"/admin/users/#{@user}"} />
+<.simple_form :let={f} for={@changeset} action={~p"/admin/users/#{@user.id}"} method="patch">
+  <.error :if={@changeset.action}>
+    Failed to save the user. Please address the errors below.
+  </.error>
+
+  <.input field={f[:username]} type="text" label="Username" />
+
+  <:actions>
+    <.button>Save User</.button>
+  </:actions>
+</.simple_form>
 
 <.back navigate={~p"/admin/users"}>Back to users</.back>

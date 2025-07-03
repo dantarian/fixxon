@@ -51,7 +51,7 @@ defmodule FixxonWeb.UserController do
   def edit_password(conn, %{"id" => id}) do
     user = Users.get_user!(id)
     changeset = Users.change_user_password(user)
-    render(conn, :edit_password, user: user, changeset: changeset)
+    render(conn, :edit_password, user: user, changeset: changeset, action: nil)
   end
 
   def update_password(conn, %{"id" => id, "user" => user_params}) do
@@ -60,11 +60,11 @@ defmodule FixxonWeb.UserController do
     case Users.update_password(user, user_params) do
       {:ok, _user} ->
         conn
-        |> put_flash(:info, "User updated successfully.")
+        |> put_flash(:info, "Password changed successfully.")
         |> redirect(to: ~p"/admin/users")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, user: user, changeset: changeset)
+        render(conn, :edit_password, user: user, changeset: changeset)
     end
   end
 
@@ -84,8 +84,10 @@ defmodule FixxonWeb.UserController do
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: ~p"/admin/users")
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, user: user, changeset: changeset)
+      {:error, %Ecto.Changeset{}} ->
+        conn
+        |> put_flash(:error, "Failed to update role.")
+        |> redirect(to: ~p"/admin/users")
     end
   end
 
@@ -93,7 +95,7 @@ defmodule FixxonWeb.UserController do
     user = Users.get_user!(id)
 
     updateUser =
-      case user_params.state do
+      case user_params["state"] do
         "active" -> &Users.activate_user/1
         "inactive" -> &Users.deactivate_user/1
         _ -> fn _ -> {:error, User.active_changeset(user, user_params)} end
@@ -105,8 +107,10 @@ defmodule FixxonWeb.UserController do
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: ~p"/admin/users")
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, user: user, changeset: changeset)
+      {:error, %Ecto.Changeset{}} ->
+        conn
+        |> put_flash(:error, "Failed to update state.")
+        |> redirect(to: ~p"/admin/users")
     end
   end
 

@@ -6,6 +6,19 @@
   <:col :let={login} label="Time">
     <FixxonWeb.Time.formatted_time datetime={login.inserted_at} />
   </:col>
-  <:col :let={login} label="User"><%= login.username %></:col>
-  <:col :let={login} label="IP Address"><%= login.ip_address %></:col>
+  <:col :let={login} label="User">{login.user.username}</:col>
+  <:col :let={login} label="IP Address">{login.ip_address}</:col>
 </.table>
+
+<Flop.Phoenix.pagination
+  meta={@meta}
+  path={~p"/admin/logins"}
+  disabled_link_attrs={[class: "btn btn-disabled"]}
+>
+  <:previous attrs={[class: "btn"]}>
+    Newer
+  </:previous>
+  <:next attrs={[class: "btn"]}>
+    Older
+  </:next>
+</Flop.Phoenix.pagination>

@@ -73,6 +73,8 @@ config :fixxon, :pow,
   user: Fixxon.Users.User,
   repo: Fixxon.Repo
 
+config :flop, repo: Fixxon.Repo
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

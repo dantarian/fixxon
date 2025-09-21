@@ -178,7 +178,7 @@ defmodule Fixxon.UsersTest do
     assert {:ok, _login} = Users.record_login(id, "192.168.0.1")
 
     assert match?(
-             [%{inserted_at: _, username: ^username, ip_address: "192.168.0.1"}],
+             {[%{inserted_at: _, user: %{username: ^username}, ip_address: "192.168.0.1"}], _},
              Users.list_logins()
            )
   end

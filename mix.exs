@@ -64,7 +64,8 @@ defmodule Fixxon.MixProject do
       {:pow, "~> 1.0.38"},
       {:calendar, "~>1.0.0"},
       {:tzdata, "~>1.1"},
-      {:json_serde, "~>1.1.1"}
+      {:json_serde, "~>1.1.1"},
+      {:flop_phoenix, "~> 0.25.3"}
     ]
   end
 

@@ -3,6 +3,7 @@ defmodule Fixxon.Users do
   import Ecto.Query, warn: false
 
   @type t :: %User{}
+  @type login :: %Login{}
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes (creation only).
@@ -197,11 +198,13 @@ defmodule Fixxon.Users do
   @doc """
   Deletes the supplied user.
   """
+  @spec delete_user(t()) :: {:ok, t()} | {:error, Ecto.Changeset.t()}
   def delete_user(%User{} = user), do: user |> User.delete_changeset() |> Repo.delete()
 
   @doc """
   Creates a login record for the specified user.
   """
+  @spec record_login(Ecto.UUID.t(), String.t()) :: {:ok, login()} | {:error, Ecto.Changeset.t()}
   def record_login(user_id, ip_address) do
     %Login{}
     |> Login.changeset(%{user_id: user_id, ip_address: ip_address})
@@ -211,13 +214,20 @@ defmodule Fixxon.Users do
   @doc """
   Returns a list of user logins.
   """
-  def list_logins() do
-    Repo.all(
-      from l in Login,
-        join: u in User,
-        on: l.user_id == u.id,
-        select: %{inserted_at: l.inserted_at, username: u.username, ip_address: l.ip_address},
-        order_by: [desc: l.inserted_at]
-    )
+  @spec list_logins(map) :: {:ok, {[login()], Flop.Meta.t()}} | {:error, Flop.Meta.t()}
+  def list_logins(params \\ %{}) do
+    opts = [for: Login, replace_invalid_params: true, default_pagination_type: :first]
+
+    with {:ok, flop} <- Flop.validate(params, opts) do
+      Login
+      |> Flop.with_named_bindings(flop, &join_login_assocs/2, opts)
+      |> Flop.run(flop, opts)
+    end
+  end
+
+  defp join_login_assocs(query, :user) do
+    query
+    |> join(:inner, [l], u in assoc(l, :user), as: :user)
+    |> preload([user: u], user: u)
   end
 end

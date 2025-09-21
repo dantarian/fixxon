@@ -2,11 +2,34 @@ defmodule Fixxon.Users.Login do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {
+    Flop.Schema,
+    filterable: [:username, :inserted_at],
+    sortable: [:username, :inserted_at],
+    adapter_opts: [
+      join_fields: [
+        username: [
+          binding: :user,
+          field: :username,
+          ecto_type: :string
+        ]
+      ]
+    ],
+    max_limit: 10,
+    default_limit: 10,
+    default_order: %{
+      order_by: [:inserted_at, :username],
+      order_directions: [:desc, :asc]
+    },
+    pagination_types: [:first, :last]
+  }
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "logins" do
     field :ip_address, :string
-    field :user_id, :binary_id
+
+    belongs_to :user, Fixxon.Users.User
 
     timestamps(type: :utc_datetime)
   end

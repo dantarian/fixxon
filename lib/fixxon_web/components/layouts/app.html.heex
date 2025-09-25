@@ -14,7 +14,7 @@
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
       <%= if Pow.Plug.current_user(@conn) do %>
         Signed in as
-        <span id="user" class="text-brand"><%= Pow.Plug.current_user(@conn).username %></span>
+        <span id="user" class="text-brand">{Pow.Plug.current_user(@conn).username}</span>
         <.link href={~p"/session"} method="delete" class="btn">
           Sign out
         </.link>
@@ -55,6 +55,6 @@
 <main class="px-4 py-20 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-3xl">
     <.flash_group flash={@flash} />
-    <%= @inner_content %>
+    {@inner_content}
   </div>
 </main>

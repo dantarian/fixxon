@@ -14,13 +14,13 @@
     <FixxonWeb.Time.formatted_time datetime={batch.inserted_at} format={:time} />
   </:col>
   <:col :let={batch} label="Batch Type">
-    <%= batch.batch_type |> Atom.to_string() |> String.capitalize() %>
+    {batch.batch_type |> Atom.to_string() |> String.capitalize()}
   </:col>
-  <:col :let={batch} label="Order Number"><%= batch.order_number %></:col>
+  <:col :let={batch} label="Order Number">{batch.order_number}</:col>
   <:col :let={batch} label="Button Type">
-    <%= batch.button_type |> Atom.to_string() |> String.capitalize() %>
+    {batch.button_type |> Atom.to_string() |> String.capitalize()}
   </:col>
-  <:col :let={batch} label="Count"><%= batch.count %></:col>
+  <:col :let={batch} label="Count">{batch.count}</:col>
   <:action :let={batch}>
     <.link navigate={~p"/batches/#{batch}/edit"}>Edit</.link>
   </:action>

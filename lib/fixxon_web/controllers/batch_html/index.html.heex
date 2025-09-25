@@ -8,10 +8,10 @@
 </.header>
 
 <.table id="batches" rows={@batches} row_click={&JS.navigate(~p"/batches/#{&1}")}>
-  <:col :let={batch} label="Type"><%= batch.type %></:col>
-  <:col :let={batch} label="Stock"><%= batch.stock %></:col>
-  <:col :let={batch} label="Order number"><%= batch.order_number %></:col>
-  <:col :let={batch} label="Count"><%= batch.count %></:col>
+  <:col :let={batch} label="Type">{batch.type}</:col>
+  <:col :let={batch} label="Stock">{batch.stock}</:col>
+  <:col :let={batch} label="Order number">{batch.order_number}</:col>
+  <:col :let={batch} label="Count">{batch.count}</:col>
   <:action :let={batch}>
     <.link navigate={~p"/batches/#{batch}/edit"}>Edit</.link>
   </:action>

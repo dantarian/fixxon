@@ -44,9 +44,9 @@
   </div>
   <%= for field <- ~w[batch_type order_number button_type count]a, error <- f[field].errors do %>
     <.error>
-      <%= field |> Atom.to_string() |> String.replace("_", " ") |> String.capitalize() %> <%= translate_error(
+      {field |> Atom.to_string() |> String.replace("_", " ") |> String.capitalize()} {translate_error(
         error
-      ) %>
+      )}
     </.error>
   <% end %>
 </.simple_form>

@@ -7,7 +7,7 @@ defmodule FixxonWeb.Time do
 
   def formatted_time(%{formatted_datetime: formatted_datetime} = assigns)
       when not is_nil(formatted_datetime) do
-    ~H"<%= @formatted_datetime %>"
+    ~H"{@formatted_datetime}"
   end
 
   def formatted_time(%{datetime: datetime, format: format} = assigns) do

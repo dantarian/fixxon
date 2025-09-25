@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
+  "packages": [
+    "nodejs@latest",
+    "github:NixOS/nixpkgs/7cc0bff31a3a705d3ac4fdceb030a17239412210#elixir",
+    "postgresql@latest",
+    "pre-commit@4.3.0"
+  ],
+  "env": {
+    "ERL_AFLAGS": "-kernel shell_history enabled"
+  },
+  "env_from": ".env",
+  "shell": {
+    "scripts": {
+      "init_hook":      "pre-commit install --hook-type commit-msg",
+      "initdb":         "initdb",
+      "create-db-user": "psql -c \"CREATE USER ${POSTGRES_USER} WITH SUPERUSER CREATEDB PASSWORD '${POSTGRES_PASSWORD}';\" postgres"
+    }
+  }
+}

@@ -12,6 +12,8 @@ defmodule Fixxon.Application do
       Fixxon.Repo,
       {DNSCluster, query: Application.get_env(:fixxon, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Fixxon.PubSub},
+      Pow.Store.Backend.MnesiaCache,
+      {Fixxon.RateLimit, clean_period: :timer.minutes(5)},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Fixxon.Finch},
       # Start a worker by calling: Fixxon.Worker.start_link(arg)

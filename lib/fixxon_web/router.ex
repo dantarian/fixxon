@@ -27,6 +27,10 @@ defmodule FixxonWeb.Router do
     plug FixxonWeb.RecordLoginPlug
   end
 
+  pipeline :rate_limit_login do
+    plug FixxonWeb.RateLimitLoginPlug
+  end
+
   scope "/" do
     pipe_through :browser
 
@@ -34,7 +38,7 @@ defmodule FixxonWeb.Router do
   end
 
   scope "/" do
-    pipe_through [:browser, :record]
+    pipe_through [:browser, :record, :rate_limit_login]
 
     resources "/session", Pow.Phoenix.SessionController, singleton: true, only: [:create]
   end

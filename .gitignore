@@ -37,3 +37,6 @@ npm-debug.log
 
 # Ignore local environment configuration
 .env
+
+# Ignore Mnesia files.
+/Mnesia.*

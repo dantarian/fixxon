@@ -5,7 +5,7 @@ defmodule Fixxon.MixProject do
     [
       app: :fixxon,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -19,7 +19,7 @@ defmodule Fixxon.MixProject do
   def application do
     [
       mod: {Fixxon.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :mnesia]
     ]
   end
 
@@ -65,7 +65,9 @@ defmodule Fixxon.MixProject do
       {:calendar, "~>1.0.0"},
       {:tzdata, "~>1.1"},
       {:json_serde, "~>1.1.1"},
-      {:flop_phoenix, "~> 0.25.3"}
+      {:flop_phoenix, "~> 0.25.3"},
+      {:argon2_elixir, "~> 4.0"},
+      {:hammer, "~> 7.0"}
     ]
   end
 

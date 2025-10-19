@@ -67,7 +67,8 @@ defmodule Fixxon.MixProject do
       {:json_serde, "~>1.1.1"},
       {:flop_phoenix, "~> 0.25.3"},
       {:argon2_elixir, "~> 4.0"},
-      {:hammer, "~> 7.0"}
+      {:hammer, "~> 7.0"},
+      {:remote_ip, "~> 1.2"}
     ]
   end
 

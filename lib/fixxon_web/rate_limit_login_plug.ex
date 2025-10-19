@@ -4,7 +4,7 @@ defmodule FixxonWeb.RateLimitLoginPlug do
   def init(config), do: config
 
   def call(conn, _) do
-    ip_address = conn.remote_up |> :inet_parse.ntoa() |> to_string()
+    ip_address = conn.remote_ip |> :inet_parse.ntoa() |> to_string()
     key = "login:#{ip_address}"
     scale = :timer.minutes(1)
     limit = 10

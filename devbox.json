@@ -12,9 +12,19 @@
   "env_from": ".env",
   "shell": {
     "scripts": {
-      "init_hook":      "pre-commit install --hook-type commit-msg",
-      "initdb":         "initdb",
-      "create-db-user": "psql -c \"CREATE USER ${POSTGRES_USER} WITH SUPERUSER CREATEDB PASSWORD '${POSTGRES_PASSWORD}';\" postgres"
+      "init_hook": "pre-commit install --hook-type commit-msg",
+      "initdb": "initdb",
+      "create-db-user": "psql -c \"CREATE USER ${POSTGRES_USER} WITH SUPERUSER CREATEDB PASSWORD '${POSTGRES_PASSWORD}';\" postgres",
+      "deploy": [
+        "git pull",
+        "mix deps.get",
+        "mix npmdeps.get",
+        "MIX_ENV=prod mix compile",
+        "MIX_ENV=prod mix ecto.migrate",
+        "MIX_ENV=prod mix phx.gen.release",
+        "MIX_ENV=prod mix release",
+        "cp -r _build /srv/webapps/fixxon"
+      ]
     }
   }
 }
